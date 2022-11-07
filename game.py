@@ -1,5 +1,5 @@
 class Game:
-    id: str
+    _id: str
     team1: str
     team2: str
     points1: int
@@ -8,8 +8,8 @@ class Game:
     team2_record: str
     url_stats: str
 
-    def __init__(self, id, team1, team2, points1, points2, team1_record, team2_record, url_stats, game_date):
-        self.id = id
+    def __init__(self, _id, team1, team2, points1, points2, team1_record, team2_record, url_stats, game_date):
+        self._id = _id
         self.team1 = team1
         self.team2 = team2
         self.points1 = points1
