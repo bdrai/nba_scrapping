@@ -1,0 +1,15 @@
+class Stats:
+    min: int
+    fg: str
+    three_pts: str
+    ft: str
+    oreb: int
+    drep: int
+    reb: int
+    ast: int
+    stl: int
+    blk: int
+    to: int
+    pf: int
+    plus_minus: int
+    pts: int
