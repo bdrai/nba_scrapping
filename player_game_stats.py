@@ -2,6 +2,7 @@ from stats import Stats
 
 
 class PlayerGameStats:
+    player_id: str
     first_name: str
     last_name: str
     game_id: str
