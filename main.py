@@ -27,8 +27,8 @@ def generate_games():
 
     for i in range(delta.days + 1):
         day = first_day_season + timedelta(days=i)
-        print(f"###   DATE: {day}   ###")
-        formated_day = str(day).replace('-', '')  # put date on espn format yyyymmdd
+        print(f"###   LOADING THE: {day}   ###")
+        formated_day = str(day).replace('-', '')  # change date to espn format yyyymmdd
         url_of_the_day = find_url_from_date(formated_day)  # find the url associated to the date
         all_ids = find_games_ids_from_url(url_of_the_day)  # scrapping all the ids of the games
         for id in all_ids:
@@ -48,6 +48,9 @@ if __name__ == '__main__':
     #     s.print_results()
     #     print("")
     #     date_games += timedelta(days=1)
-    games = generate_games()
+    try:
+        games = generate_games()
+    except:
+
     print(games)
     [print(game) for game in games]
