@@ -23,7 +23,7 @@ def generate_games():
     """Find all the dates of the games since the beginning of the season"""
     all_games = []
     first_day_season = date(2022, 10, 18)  # first day of the season
-    delta = date.today() - first_day_season  # returns timedelta
+    delta = date.today() - timedelta(days=1) - first_day_season  # returns timedelta
 
     for i in range(delta.days + 1):
         day = first_day_season + timedelta(days=i)
@@ -31,15 +31,16 @@ def generate_games():
         formated_day = str(day).replace('-', '')  # change date to espn format yyyymmdd
         url_of_the_day = find_url_from_date(formated_day)  # find the url associated to the date
         all_ids = find_games_ids_from_url(url_of_the_day)  # scrapping all the ids of the games
-        for id in all_ids:
-            all_games.append(Game(id, day))
+        for _id in all_ids:
+            all_games.append(Game(_id, day))
     return all_games
 
 
 def main():
     games = generate_games()
     for game in games:
-        print(game)
+        game.scraping_stats()
+        game.print_game_stats()
 
 
 if __name__ == '__main__':
