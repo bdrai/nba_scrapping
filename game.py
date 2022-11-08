@@ -22,13 +22,10 @@ class Game:
     def scraping_stats(self):
         page = requests.get(self.url_stats)
         soup = BeautifulSoup(page.content, "html.parser")
-        page_html = soup.find(id="espnfitt").find(id="DataWrapper") \
-            .find(id="fitt-analytics").find("div", class_="StickyContainer")
-        teams_tab = page_html.find_all("div", class_="Boxscore flex flex-column")
+        teams_tab = soup.find("div", class_="StickyContainer").find_all("div", class_="Boxscore flex flex-column")
 
         for team_number, team_tab in enumerate(teams_tab):
             team_name = team_tab.find("div", class_="BoxscoreItem__TeamName h5").text
-
             tab = team_tab.find("div", class_="ResponsiveTable ResponsiveTable--fixed-left Boxscore flex flex-column") \
                 .find("div", class_="flex")
             players = tab.find("table", class_="Table Table--align-right Table--fixed Table--fixed-left") \
@@ -67,6 +64,7 @@ class Game:
                     self.team2_stats.add_player_game_stats(player_game_stats)
 
     def print_game_stats(self):
+        """Printing the games stats using a dataframe"""
         print("######################################################")
         print(f"{self.game_date}: {self.team1_stats.team_name} - {self.team2_stats.team_name} ({self.game_id})")
         print("######################################################")

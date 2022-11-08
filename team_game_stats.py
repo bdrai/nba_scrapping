@@ -24,7 +24,7 @@ class TeamGameStats:
         self.team_name = team_name
 
     def print_dataframe(self):
-        """Transformer une liste de liste de joueurs en datagrame"""
+        """Print a pandas dataframe containing the box score for each game"""
         df_list = []
         for player_stat in self.players_stats:
             df_list.append([

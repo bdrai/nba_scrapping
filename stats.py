@@ -39,6 +39,7 @@ class Stats:
 
     @staticmethod
     def process_stats(stats_list):
+        """Manages the proportion stats, for example FGM/FGA to split it"""
         output = []
         for elt in stats_list:
             try:
@@ -51,6 +52,7 @@ class Stats:
         return output
 
     def export_stats_in_list(self):
+        """Return the statistics onto a list"""
         return [
             self.min, self.fgm, self.fga, self.three_pts_m, self.three_pts_a,
             self.ftm, self.fta, self.oreb, self.drep, self.reb, self.ast,
