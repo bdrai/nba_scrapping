@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from game import Game
+import argparse
 
 
 def find_url_from_date(day: datetime.date):
@@ -19,14 +20,23 @@ def find_games_ids_from_url(url: str):
     return ids
 
 
-def generate_games():
-    """Find all the dates of the games since the beginning of the season"""
-    all_games = []
-    first_day_season = date(2022, 10, 18)  # first day of the season
-    delta = date.today() - timedelta(days=1) - first_day_season  # returns timedelta
+def string_to_date(string: str):
+    """Convert string to date format"""
+    string = string.replace('/', '-')
+    string = list(map(int, string.split('-')))
+    return date(string[0], string[1], string[2])
 
-    for i in range(delta.days + 1):
-        day = first_day_season + timedelta(days=i)
+
+def generate_games(start_date="2022-10-18", end_date=str(date.today())):
+    """Generate the statistics of all the games between start_date and end_date """
+    all_games = []
+    start_date = string_to_date(start_date)
+    end_date = string_to_date(end_date)
+
+    delta = end_date - timedelta(days=1) - start_date  # returns timedelta
+
+    for i in range(delta.days + 2):
+        day = start_date + timedelta(days=i)
         print(f"###   LOADING THE: {day}   ###")
         formated_day = str(day).replace('-', '')  # change date to espn format yyyymmdd
         url_of_the_day = find_url_from_date(formated_day)  # find the url associated to the date
