@@ -27,7 +27,7 @@ def string_to_date(string: str):
     return date(string[0], string[1], string[2])
 
 
-def generate_games(start_date="2022-10-18", end_date=str(date.today())):
+def generate_games(start_date="2022-10-18", end_date=str(date.today() - timedelta(days=1))):
     """Generate the statistics of all the games between start_date and end_date """
     all_games = []
     start_date = string_to_date(start_date)
@@ -47,9 +47,9 @@ def generate_games(start_date="2022-10-18", end_date=str(date.today())):
 
 
 def main():
-    games = generate_games()
+    games = generate_games(start_date="2022-11-12")
     for game in games:
-        game.scraping_stats()
+        game.scrapping_stats()
         game.print_game_stats()
 
 
