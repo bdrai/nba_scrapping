@@ -46,7 +46,12 @@ class Stats:
                 value = int(elt)
                 output.append(value)
             except ValueError:
-                if '-' in elt:
+                if elt == '--':
+                    output.append(0)
+                elif elt == '-----':
+                    output.append(0)
+                    output.append(0)
+                elif '-' in elt:
                     value = elt.split('-')
                     output += [*value]
         return output
