@@ -49,7 +49,7 @@ def generate_games(start_date="2022-10-18", end_date=str(date.today())):
 def main():
     games = generate_games()
     for game in games:
-        game.scraping_stats()
+        game.scrapping_stats()
         game.print_game_stats()
 
 
