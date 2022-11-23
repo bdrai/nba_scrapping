@@ -26,7 +26,7 @@ class NBADatabase:
         query = """
             CREATE TABLE IF NOT EXISTS Team (
                 id VARCHAR(10) NOT NULL PRIMARY KEY, 
-                name VARCHAR(250) NOT NULL, 
+                `name` VARCHAR(250) NOT NULL, 
                 division VARCHAR(250)
             );
         """
@@ -55,7 +55,7 @@ class NBADatabase:
         query = """
                 CREATE TABLE IF NOT EXISTS Game (
                     id BIGINT NOT NULL PRIMARY KEY , 
-                    date DATE NOT NULL, 
+                    `date` DATE NOT NULL, 
                     team_home_id VARCHAR(10) NOT NULL,
                     team_away_id VARCHAR(10) NOT NULL,
                     team_home_score INT NOT NULL, 
@@ -71,17 +71,17 @@ class NBADatabase:
     @staticmethod
     def create_table_player_game_stats(cursor):
         """Creates table `PlayerGameStats`"""
+        # TODO: Add FOREIGN KEY PLAYER WHEN Class PLAYER WILL BE DEFINED
         query = """
             CREATE TABLE IF NOT EXISTS PlayerGameStats (
                 id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 player_id BIGINT NOT NULL,
                 game_id BIGINT NOT NULL,
-                team_id VARCHAR(10) NOT NULL,
-                position VARCHAR(250),
+                `position` VARCHAR(250),
                 is_starter BOOLEAN,
                 is_dnp BOOLEAN,
                 dnp_reason VARCHAR(250),
-                min INT,
+                `min` INT,
                 fgm INT,
                 fga INT,
                 three_pts_m INT,
@@ -98,9 +98,7 @@ class NBADatabase:
                 pf INT,
                 plus_minus INT,
                 pts INT,
-                FOREIGN KEY (game_id) REFERENCES Game(id),
-                FOREIGN KEY (team_id) REFERENCES Team(id),
-                FOREIGN KEY (player_id) REFERENCES Player(id)
+                FOREIGN KEY (game_id) REFERENCES Game(id)
             );
         """
         cursor.execute(query)
