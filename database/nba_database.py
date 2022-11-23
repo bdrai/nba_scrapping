@@ -7,15 +7,12 @@ USER_MYSQL: str
 
 
 class NBADatabase:
-
+    """Class to manage NBA database"""
     def __init__(self, env: Env):
         self.env = env
 
-    def is_created(self):
-        """Returns True if the database and the tables exist."""
-        pass
-
     def create_database(self):
+        """Create database with the name configured in .env file"""
         connection = pymysql.connect(host=self.env.HOST_MYSQL, user=self.env.USER_MYSQL, password=self.env.PWD_MYSQL)
         cursor = connection.cursor()
         cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.env.DB_MYSQL};")
@@ -25,6 +22,7 @@ class NBADatabase:
 
     @staticmethod
     def create_table_game(cursor):
+        """Creates table `Game`"""
         query = """
             CREATE TABLE IF NOT EXISTS Game (
                 id BIGINT NOT NULL PRIMARY KEY , 
@@ -39,6 +37,7 @@ class NBADatabase:
 
     @staticmethod
     def create_table_team(cursor):
+        """Creates table `Team`"""
         query = """
             CREATE TABLE IF NOT EXISTS Team (
                 id VARCHAR(10) NOT NULL PRIMARY KEY, 
@@ -50,6 +49,7 @@ class NBADatabase:
 
     @staticmethod
     def create_table_player(cursor):
+        """Creates table `Player`"""
         query = """
             CREATE TABLE IF NOT EXISTS Player (
                 id BIGINT NOT NULL PRIMARY KEY,
@@ -64,6 +64,7 @@ class NBADatabase:
 
     @staticmethod
     def create_table_player_game_stats(cursor):
+        """Creates table `PlayerGameStats`"""
         query = """
             CREATE TABLE IF NOT EXISTS PlayerGameStats (
                 id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -99,12 +100,14 @@ class NBADatabase:
         cursor.execute(query)
 
     def create_tables(self, cursor):
+        """Creates all tables in once"""
         self.create_table_game(cursor)
         self.create_table_team(cursor)
         self.create_table_player(cursor)
         self.create_table_player_game_stats(cursor)
 
     def initialize_database(self):
+        """Initialize the database by creating it and the tables with."""
         self.create_database()
         connection = pymysql.connect(host=self.env.HOST_MYSQL, user=self.env.USER_MYSQL,
                                      password=self.env.PWD_MYSQL, database=self.env.DB_MYSQL)
