@@ -21,21 +21,6 @@ class NBADatabase:
         connection.close()
 
     @staticmethod
-    def create_table_game(cursor):
-        """Creates table `Game`"""
-        query = """
-            CREATE TABLE IF NOT EXISTS Game (
-                id BIGINT NOT NULL PRIMARY KEY , 
-                date DATE NOT NULL, 
-                team_home_score INT NOT NULL, 
-                team_outside_score INT NOT NULL, 
-                location VARCHAR(250), 
-                arena INT
-            );
-        """
-        cursor.execute(query)
-
-    @staticmethod
     def create_table_team(cursor):
         """Creates table `Team`"""
         query = """
@@ -60,6 +45,25 @@ class NBADatabase:
                 college VARCHAR(250)
             );
         """
+        cursor.execute(query)
+
+    @staticmethod
+    def create_table_game(cursor):
+        """Creates table `Game`"""
+        query = """
+                CREATE TABLE IF NOT EXISTS Game (
+                    id BIGINT NOT NULL PRIMARY KEY , 
+                    date DATE NOT NULL, 
+                    team_home_id VARCHAR(10) NOT NULL,
+                    team_away_id VARCHAR(10) NOT NULL,
+                    team_home_score INT NOT NULL, 
+                    team_away_score INT NOT NULL, 
+                    location VARCHAR(250), 
+                    arena INT,
+                    FOREIGN KEY (team_home_id) REFERENCES Team(id),
+                    FOREIGN KEY (team_away_id) REFERENCES Team(id)
+                );
+            """
         cursor.execute(query)
 
     @staticmethod
@@ -101,9 +105,9 @@ class NBADatabase:
 
     def create_tables(self, cursor):
         """Creates all tables in once"""
-        self.create_table_game(cursor)
         self.create_table_team(cursor)
         self.create_table_player(cursor)
+        self.create_table_game(cursor)
         self.create_table_player_game_stats(cursor)
 
     def initialize_database(self):
