@@ -91,7 +91,7 @@ class ScrappingBoxScore:
                                      password=env.PWD_MYSQL, database=env.DB_MYSQL)
         cursor = connection.cursor()
         for player_stats in self.players_stats:
-            player_stats.write_game_in_db(cursor)
+            player_stats.write_in_db(cursor)
         connection.commit()
         cursor.close()
         connection.close()
