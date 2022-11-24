@@ -8,15 +8,9 @@ import datetime
 from typing import List
 from game import Game
 
-"""
-scrapper le scoreboard
-Creer des games avec 
-    l'id du game, la date les ids des equipes, le score
-Parourir chaque game pour récupérer l'id et scrapper les box scores
-"""
-
 
 class ScrappingScoreboard:
+    """Scrapper for scrapping ESPN Scoreboard."""
     PLAYING_HOME_INDEX = 5
 
     url: str

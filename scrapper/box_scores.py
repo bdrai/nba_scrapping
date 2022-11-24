@@ -11,6 +11,7 @@ from player_game_stats import PlayerGameStats
 
 
 class ScrappingBoxScore:
+    """Scrapper for scrapping ESPN Box Scores."""
     url: str
     game_id: str
     players_stats: List[PlayerGameStats]
@@ -87,6 +88,7 @@ class ScrappingBoxScore:
                 self.players_stats.append(player_game_stats)
 
     def save_in_db(self, env: Env):
+        """Writes data scrapped in box scores into PlayerGameStats table."""
         connection = pymysql.connect(host=env.HOST_MYSQL, user=env.USER_MYSQL,
                                      password=env.PWD_MYSQL, database=env.DB_MYSQL)
         cursor = connection.cursor()
