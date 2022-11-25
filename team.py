@@ -1,8 +1,7 @@
 import requests
 import pymysql.cursors
-from bs4 import BeautifulSoup
-
 from env import Env
+from bs4 import BeautifulSoup
 
 
 class Team:
@@ -52,6 +51,7 @@ class Team:
         self.name = ' '.join([span.text for span in name_html.find_all("span")])
         division_html = page_html.find("ul", class_="list flex ClubhouseHeader__Record n8 ml4").find_all("li")[-1]
         self.division = division_html.text.split("in ")[-1]
+        print(f"{self.name.upper()} ({self._id}) - {self.division}")
         self.write_in_db(cursor)
 
     def __str__(self):

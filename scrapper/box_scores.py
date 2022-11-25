@@ -1,12 +1,12 @@
 import pymysql.cursors
 import requests
-import datetime
 from typing import List
 from bs4 import BeautifulSoup
 
 from constants import *
 from env import Env
 from stats import Stats
+from player import Player
 from player_game_stats import PlayerGameStats
 
 
@@ -46,9 +46,10 @@ class ScrappingBoxScore:
         player_name_div = player_html.find("a", PLAYER_NAME)
         if not player_name_div:
             return
-        player_id = player_name_div["href"].split("/")[-2]
+        player_url = player_name_div["href"]
+        player_id = player_url.split("/")[-2]
         player_position = player_html.find("span", class_=PLAYER_POSITION).text
-        return player_id, player_position
+        return player_url, player_id, player_position
 
     @staticmethod
     def get_player_stats(player_data_html):
@@ -79,12 +80,12 @@ class ScrappingBoxScore:
                 player_info = self.get_player_info(player)
                 if not player_info:
                     continue
-                player_id, player_position = player_info
+                player_url, player_id, player_position = player_info
 
                 stats, is_dnp, dnp_reason = self.get_player_stats(data)
+                player = Player(player_url)
                 player_game_stats = PlayerGameStats(player_id, self.game_id, False, is_dnp,
                                                     dnp_reason, player_position, Stats(stats))
-                print(player_game_stats)
                 self.players_stats.append(player_game_stats)
 
     def save_in_db(self, env: Env):

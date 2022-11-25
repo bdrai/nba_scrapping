@@ -1,7 +1,13 @@
+import time
+
 import requests
 from bs4 import BeautifulSoup
-from datetime import date, datetime, timedelta
+import datetime
+
+from env import Env
 from game import Game
+from database.nba_database import NBADatabase
+from scrapper.scrapper import ScrapperDay
 import argparse
 
 
@@ -24,19 +30,19 @@ def string_to_date(string: str):
     """Convert string to date format"""
     string = string.replace('/', '-')
     string = list(map(int, string.split('-')))
-    return date(string[0], string[1], string[2])
+    return datetime.date(string[0], string[1], string[2])
 
 
-def generate_games(start_date="2022-10-18", end_date=str(date.today() - timedelta(days=1))):
+def generate_games(start_date="2022-10-18", end_date=str(datetime.date.today() - datetime.timedelta(days=1))):
     """Generate the statistics of all the games between start_date and end_date """
     all_games = []
     start_date = string_to_date(start_date)
     end_date = string_to_date(end_date)
 
-    delta = end_date - timedelta(days=1) - start_date  # returns timedelta
+    delta = end_date - datetime.timedelta(days=1) - start_date  # returns timedelta
 
     for i in range(delta.days + 2):
-        day = start_date + timedelta(days=i)
+        day = start_date + datetime.timedelta(days=i)
         print(f"###   LOADING THE: {day}   ###")
         formated_day = str(day).replace('-', '')  # change date to espn format yyyymmdd
         url_of_the_day = find_url_from_date(formated_day)  # find the url associated to the date
@@ -46,11 +52,23 @@ def generate_games(start_date="2022-10-18", end_date=str(date.today() - timedelt
     return all_games
 
 
+def get_all_dates(start_date=datetime.date(2022, 10, 18), end_date=datetime.date.today() - datetime.timedelta(days=1)):
+    d = start_date
+    dates = [d.strftime("%Y%m%d")]
+    while d < end_date:
+        d += datetime.timedelta(days=1)
+        dates.append(d.strftime("%Y%m%d"))
+    return dates
+
+
 def main():
-    games = generate_games(start_date="2022-11-12")
-    for game in games:
-        game.scrapping_stats()
-        game.print_game_stats()
+    db = NBADatabase(Env())
+    db.initialize_database()
+    dates = get_all_dates()
+    for d in dates:
+        scrapper = ScrapperDay(d)
+        scrapper.scrapping(save_in_db=True)
+        time.sleep(1)
 
 
 if __name__ == '__main__':

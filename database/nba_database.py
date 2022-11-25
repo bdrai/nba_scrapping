@@ -38,7 +38,7 @@ class NBADatabase:
         query = """
             CREATE TABLE IF NOT EXISTS Player (
                 id BIGINT NOT NULL PRIMARY KEY,
-                team_id VARCHAR(10) NOT NULL,
+                team_id VARCHAR(10),
                 full_name VARCHAR(250) NOT NULL,
                 height VARCHAR(250), 
                 weight VARCHAR(250),
@@ -98,7 +98,8 @@ class NBADatabase:
                 pf INT,
                 plus_minus INT,
                 pts INT,
-                FOREIGN KEY (game_id) REFERENCES Game(id)
+                FOREIGN KEY (game_id) REFERENCES Game(id),
+                FOREIGN KEY (player_id) REFERENCES Player(id)
             );
         """
         cursor.execute(query)

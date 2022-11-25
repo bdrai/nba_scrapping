@@ -1,12 +1,14 @@
 # Data mining project : NBA
+ - [Benjamin Drai](https://www.linkedin.com/in/benjamin-d-838919127)
+ - [Kevin Jerusalmi](https://www.linkedin.com/in/kevin-jerusalmi-151a74188)
 
 ## Introduction
 The goal of this project is to create dashboards about NBA players' statistics during the season. 
 
 This project is composed of three parts:
-* Scrap the data from a website
-* Design and implement a database to store them
-* Run the code in production on AWS server
+* Scrap the data from a website.
+* Design and implement a database to store them.
+* Run the code in production on AWS server.
 * Create dashboards to analyse the data.
 
 

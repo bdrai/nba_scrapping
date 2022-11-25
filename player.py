@@ -1,10 +1,8 @@
 import datetime
-
 import requests
 import pymysql.cursors
-from bs4 import BeautifulSoup
-
 from env import Env
+from bs4 import BeautifulSoup
 
 
 class Player:
@@ -39,7 +37,7 @@ class Player:
     def write_in_db(self, cursor):
         """Writes Player data in MySQL database."""
         query_insert = """
-            INSERT INTO `Team` (
+            INSERT INTO `Player` (
                 `id`,
                 `team_id`,
                 `full_name`, 
@@ -57,13 +55,16 @@ class Player:
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
         player_html = soup.find("div", class_="StickyContainer")
-        player_name_html = player_html.find("div", class_="PlayerHeader__Main_Aside min-w-0 flex-grow flex-basis-0")\
+        player_name_html = player_html.find("div", class_="PlayerHeader__Main_Aside min-w-0 flex-grow flex-basis-0") \
             .find("h1", class_="PlayerHeader__Name flex flex-column ttu fw-bold pr4 h2").find_all("span")
         self.full_name = " ".join([p.text for p in player_name_html])
 
-        player_team_html = player_html\
+        player_team_html = player_html \
             .find("div", class_="PlayerHeader__Team n8 mt3 mb4 flex items-center mt3 mb4 clr-gray-01")
-        self.team_id = player_team_html.find("a")["href"].split("/")[-2].lower()
+        try:
+            self.team_id = player_team_html.find("a")["href"].split("/")[-2].lower()
+        except TypeError:
+            self.team_id = None
         player_bio_html = player_html.find("div", class_="PlayerHeader__Bio pv5")
         info_html = player_bio_html.find_all("li")
         self.height, self.weight, self.birth_date, self.college = None, None, None, None
@@ -72,10 +73,16 @@ class Player:
             if title.text == "HT/WT":
                 self.height, self.weight = result.text.split(", ")
             elif title.text == "Birthdate":
-                self.birth_date = result.text.split('(')[0]
+                self.birth_date = datetime.datetime.strptime(result.text.split(' (')[0], "%m/%d/%Y")
             elif title.text == "College":
                 self.college = result.text
+        print(self.full_name, self.team_id, self.height, self.weight, self.birth_date, self.college, sep=', ')
         self.write_in_db(cursor)
 
     def __str__(self):
         return f"{self._id}: {self.full_name.title()} - {self.team_id.upper()}"
+
+
+if __name__ == '__main__':
+    winslow = Player("https://www.espn.co.uk/nba/player/_/id/3135047/justise-winslow")
+    kuzma = Player("https://www.espn.co.uk/nba/player/_/id/3134907/kyle-kuzma")
