@@ -39,15 +39,15 @@ class Player:
         query_insert = """
             INSERT INTO `Player` (
                 `id`,
+                `full_name`,
                 `team_id`,
-                `full_name`, 
                 `height`, 
                 `weight`, 
                 `birth_date`,
                 `college`
             ) VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(query_insert, (self._id, self.team_id, self.full_name, self.height,
+        cursor.execute(query_insert, (self._id, self.full_name, self.team_id, self.height,
                                       self.weight, self.birth_date, self.college))
 
     def scrap_player_info(self, url, cursor):
