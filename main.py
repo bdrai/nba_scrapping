@@ -1,20 +1,22 @@
+import sys
 import requests
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from game import Game
 import argparse
+from constants import *
 
 
 def find_url_from_date(day: datetime.date):
     """Find the url of all the games for a given date """
-    return 'https://www.espn.com/nba/scoreboard/_/date/' + str(day)
+    return DOMAIN_URL_FROM_DATE + str(day)
 
 
 def find_games_ids_from_url(url: str):
     """Finds all the ids of the games on a given day (using the url of the schedule of this day)"""
     page = requests.get(url)
     soup = BeautifulSoup(page.content, "html.parser")
-    page_html = soup.find(id="fitt-analytics").find(id="fittPageContainer").find_all(
+    page_html = soup.find(id="fittPageContainer").find_all(
         class_="Scoreboard bg-clr-white flex flex-auto justify-between")
     ids = [elt['id'] for elt in page_html]
     return ids
@@ -27,12 +29,11 @@ def string_to_date(string: str):
     return date(string[0], string[1], string[2])
 
 
-def generate_games(start_date="2022-10-18", end_date=str(date.today())):
+def generate_games(start_date="2022-10-18", end_date=str(date.today() - timedelta(days=1))):
     """Generate the statistics of all the games between start_date and end_date """
     all_games = []
-    start_date = string_to_date(start_date)
-    end_date = string_to_date(end_date)
-
+    start_date = max(string_to_date(start_date), SEASON_START_DATE)
+    end_date = min(string_to_date(end_date), date.today() - timedelta(days=1))
     delta = end_date - timedelta(days=1) - start_date  # returns timedelta
 
     for i in range(delta.days + 2):
@@ -46,11 +47,34 @@ def generate_games(start_date="2022-10-18", end_date=str(date.today())):
     return all_games
 
 
-def main():
-    games = generate_games()
+def get_args():
+    """
+    Generate stats from certain dates
+    :return: Scrapping from the start date and the end date given
+    """
+    parser = argparse.ArgumentParser()  # create the parser
+    parser.add_argument("dates", nargs="*", type=str)
+    args = parser.parse_args()  # gets the argument
+    dates = vars(args)
+    if not len(dates['dates']):
+        games = generate_games()
+    elif len(dates['dates']) == 1:
+        games = generate_games(start_date=sys.argv[1], end_date=sys.argv[1])
+    elif len(dates['dates']) == 2:
+        games = generate_games(start_date=sys.argv[1], end_date=sys.argv[2])
+    else:
+        sys.exit("Too many arguments were given")
     for game in games:
         game.scrapping_stats()
         game.print_game_stats()
+
+
+def main():
+    # games = generate_games(start_date="2022-11-12")
+    # for game in games:
+    #     game.scrapping_stats()
+    #     game.print_game_stats()
+    get_args()
 
 
 if __name__ == '__main__':
