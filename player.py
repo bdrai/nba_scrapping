@@ -81,8 +81,3 @@ class Player:
 
     def __str__(self):
         return f"{self._id}: {self.full_name.title()} - {self.team_id.upper()}"
-
-
-if __name__ == '__main__':
-    winslow = Player("https://www.espn.co.uk/nba/player/_/id/3135047/justise-winslow")
-    kuzma = Player("https://www.espn.co.uk/nba/player/_/id/3134907/kyle-kuzma")
