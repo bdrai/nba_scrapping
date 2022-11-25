@@ -14,7 +14,7 @@ class Player:
     height: str
     weight: str
     birth_date: datetime.date
-  A  college: str
+    college: str
 
     def __init__(self, url):
         self._id = url.split("/")[-2]
@@ -29,6 +29,7 @@ class Player:
         connection.close()
 
     def is_in_db(self, cursor):
+        """Tests if the Player is in the database."""
         cursor.execute(f"SELECT * FROM `Player` WHERE id = '{self._id}';")
         result = cursor.fetchone()
         if result:
@@ -36,6 +37,7 @@ class Player:
         return False
 
     def write_in_db(self, cursor):
+        """Writes Player data in MySQL database."""
         query_insert = """
             INSERT INTO `Team` (
                 `id`,
@@ -51,6 +53,7 @@ class Player:
                                       self.weight, self.birth_date, self.college))
 
     def scrap_player_info(self, url, cursor):
+        """Scraps Player data from ESPN."""
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
         player_html = soup.find("div", class_="StickyContainer")
@@ -65,7 +68,6 @@ class Player:
         info_html = player_bio_html.find_all("li")
         self.height, self.weight, self.birth_date, self.college = None, None, None, None
         for info in info_html:
-            print(self.height, self.weight, self.birth_date, self.college, sep=', ')
             title, result = info.find_all("div")[:2]
             if title.text == "HT/WT":
                 self.height, self.weight = result.text.split(", ")

@@ -23,6 +23,7 @@ class Team:
         connection.close()
 
     def is_in_db(self, cursor):
+        """Tests if the Team is in the database."""
         cursor.execute(f"SELECT * FROM `Team` WHERE id = '{self._id}';")
         result = cursor.fetchone()
         if result:
@@ -32,6 +33,7 @@ class Team:
         return False
 
     def write_in_db(self, cursor):
+        """Writes Team data in MySQL database."""
         query_insert = """
             INSERT INTO `Team` (
                 `id`,
@@ -42,6 +44,7 @@ class Team:
         cursor.execute(query_insert, (self._id, self.name, self.division))
 
     def scrap_team_info(self, url, cursor):
+        """Scraps Team data from ESPN."""
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
         page_html = soup.find(id="fitt-analytics").find(id="fittPageContainer")
