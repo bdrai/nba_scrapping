@@ -40,8 +40,8 @@ class NBADatabase:
                 id BIGINT NOT NULL PRIMARY KEY,
                 team_id VARCHAR(10) NOT NULL,
                 full_name VARCHAR(250) NOT NULL,
-                height FLOAT, 
-                weight FLOAT,
+                height VARCHAR(250), 
+                weight VARCHAR(250),
                 birth_date DATE,
                 college VARCHAR(250),
                 FOREIGN KEY (team_id) REFERENCES Team(id)

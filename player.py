@@ -1,2 +1,79 @@
+import datetime
+
+import requests
+import pymysql.cursors
+from bs4 import BeautifulSoup
+
+from env import Env
+
+
 class Player:
-    pass
+    _id: int
+    team_id: str
+    full_name: str
+    height: str
+    weight: str
+    birth_date: datetime.date
+  A  college: str
+
+    def __init__(self, url):
+        self._id = url.split("/")[-2]
+        env = Env()
+        connection = pymysql.connect(host=env.HOST_MYSQL, user=env.USER_MYSQL,
+                                     password=env.PWD_MYSQL, database=env.DB_MYSQL)
+        cursor = connection.cursor()
+        if not self.is_in_db(cursor):
+            self.scrap_player_info(url, cursor)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+    def is_in_db(self, cursor):
+        cursor.execute(f"SELECT * FROM `Player` WHERE id = '{self._id}';")
+        result = cursor.fetchone()
+        if result:
+            return True
+        return False
+
+    def write_in_db(self, cursor):
+        query_insert = """
+            INSERT INTO `Team` (
+                `id`,
+                `team_id`,
+                `full_name`, 
+                `height`, 
+                `weight`, 
+                `birth_date`,
+                `college`
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query_insert, (self._id, self.team_id, self.full_name, self.height,
+                                      self.weight, self.birth_date, self.college))
+
+    def scrap_player_info(self, url, cursor):
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, "html.parser")
+        player_html = soup.find("div", class_="StickyContainer")
+        player_name_html = player_html.find("div", class_="PlayerHeader__Main_Aside min-w-0 flex-grow flex-basis-0")\
+            .find("h1", class_="PlayerHeader__Name flex flex-column ttu fw-bold pr4 h2").find_all("span")
+        self.full_name = " ".join([p.text for p in player_name_html])
+
+        player_team_html = player_html\
+            .find("div", class_="PlayerHeader__Team n8 mt3 mb4 flex items-center mt3 mb4 clr-gray-01")
+        self.team_id = player_team_html.find("a")["href"].split("/")[-2].lower()
+        player_bio_html = player_html.find("div", class_="PlayerHeader__Bio pv5")
+        info_html = player_bio_html.find_all("li")
+        self.height, self.weight, self.birth_date, self.college = None, None, None, None
+        for info in info_html:
+            print(self.height, self.weight, self.birth_date, self.college, sep=', ')
+            title, result = info.find_all("div")[:2]
+            if title.text == "HT/WT":
+                self.height, self.weight = result.text.split(", ")
+            elif title.text == "Birthdate":
+                self.birth_date = result.text.split('(')[0]
+            elif title.text == "College":
+                self.college = result.text
+        self.write_in_db(cursor)
+
+    def __str__(self):
+        return f"{self._id}: {self.full_name.title()} - {self.team_id.upper()}"
