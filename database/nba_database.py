@@ -25,9 +25,9 @@ class NBADatabase:
         """Creates table `Team`"""
         query = """
             CREATE TABLE IF NOT EXISTS Team (
-                id VARCHAR(10) NOT NULL PRIMARY KEY, 
+                `id` VARCHAR(10) NOT NULL PRIMARY KEY, 
                 `name` VARCHAR(250) NOT NULL, 
-                division VARCHAR(250)
+                `division` VARCHAR(250)
             );
         """
         cursor.execute(query)
@@ -37,13 +37,13 @@ class NBADatabase:
         """Creates table `Player`"""
         query = """
             CREATE TABLE IF NOT EXISTS Player (
-                id BIGINT NOT NULL PRIMARY KEY,
-                full_name VARCHAR(250) NOT NULL,
-                team_id VARCHAR(10),
-                height VARCHAR(250), 
-                weight VARCHAR(250),
-                birth_date DATE,
-                college VARCHAR(250),
+                `id` BIGINT NOT NULL PRIMARY KEY,
+                `full_name` VARCHAR(250) NOT NULL,
+                `team_id` VARCHAR(10),
+                `height` VARCHAR(250), 
+                `weight` VARCHAR(250),
+                `birth_date` DATE,
+                `college` VARCHAR(250),
                 FOREIGN KEY (team_id) REFERENCES Team(id)
             );
         """
@@ -54,14 +54,14 @@ class NBADatabase:
         """Creates table `Game`"""
         query = """
                 CREATE TABLE IF NOT EXISTS Game (
-                    id BIGINT NOT NULL PRIMARY KEY , 
+                    `id` BIGINT NOT NULL PRIMARY KEY , 
                     `date` DATE NOT NULL, 
-                    team_home_id VARCHAR(10) NOT NULL,
-                    team_away_id VARCHAR(10) NOT NULL,
-                    team_home_score INT NOT NULL, 
-                    team_away_score INT NOT NULL, 
-                    location VARCHAR(250), 
-                    arena INT,
+                    `team_home_id` VARCHAR(10) NOT NULL,
+                    `team_away_id` VARCHAR(10) NOT NULL,
+                    `team_home_score` INT NOT NULL, 
+                    `team_away_score` INT NOT NULL, 
+                    `location` VARCHAR(250), 
+                    `arena` INT,
                     FOREIGN KEY (team_home_id) REFERENCES Team(id),
                     FOREIGN KEY (team_away_id) REFERENCES Team(id)
                 );
@@ -74,30 +74,30 @@ class NBADatabase:
         # TODO: Add FOREIGN KEY PLAYER WHEN Class PLAYER WILL BE DEFINED
         query = """
             CREATE TABLE IF NOT EXISTS PlayerGameStats (
-                id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                player_id BIGINT NOT NULL,
-                game_id BIGINT NOT NULL,
+                `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                `player_id` BIGINT NOT NULL,
+                `game_id` BIGINT NOT NULL,
                 `position` VARCHAR(250),
-                is_starter BOOLEAN,
-                is_dnp BOOLEAN,
-                dnp_reason VARCHAR(250),
+                `is_starter` BOOLEAN,
+                `is_dnp` BOOLEAN,
+                `dnp_reason` VARCHAR(250),
                 `min` INT,
-                fgm INT,
-                fga INT,
-                three_pts_m INT,
-                three_pts_a INT,
-                ftm INT,
-                fta INT,
-                oreb INT,
-                drep INT,
-                reb INT,
-                ast INT,
-                stl INT,
-                blk INT,
+                `fgm` INT,
+                `fga` INT,
+                `three_pts_m` INT,
+                `three_pts_a` INT,
+                `ftm` INT,
+                `fta` INT,
+                `oreb` INT,
+                `drep` INT,
+                `reb` INT,
+                `ast` INT,
+                `stl` INT,
+                `blk` INT,
                 `to` INT,
-                pf INT,
-                plus_minus INT,
-                pts INT,
+                `pf` INT,
+                `plus_minus` INT,
+                `pts` INT,
                 FOREIGN KEY (game_id) REFERENCES Game(id),
                 FOREIGN KEY (player_id) REFERENCES Player(id)
             );
