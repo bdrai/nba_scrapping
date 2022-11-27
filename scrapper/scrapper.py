@@ -23,7 +23,3 @@ class ScrapperDay:
             if save_in_db:
                 box_scores_scrapper.save_in_db(env)
 
-
-if __name__ == '__main__':
-    s = ScrapperDay(20221119)
-    s.scrapping(save_in_db=True)
