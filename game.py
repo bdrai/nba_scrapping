@@ -52,13 +52,3 @@ class Game:
                f"{self.team_home_score} - {self.team_away_score}"
 
 
-if __name__ == '__main__':
-    env = Env()
-    connection = pymysql.connect(host=env.HOST_MYSQL, user=env.USER_MYSQL,
-                                 password=env.PWD_MYSQL, database=env.DB_MYSQL)
-    cursor = connection.cursor()
-    g = Game(1, datetime.date.today(), 'LAK', 'TOT', 100, 50)
-    g.write_game_in_db(cursor)
-    connection.commit()
-    cursor.close()
-    connection.close()

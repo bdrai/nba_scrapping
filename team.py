@@ -58,6 +58,3 @@ class Team:
         return f"{self.name.upper()} ({self._id}) - {self.division}"
 
 
-if __name__ == '__main__':
-    t = Team('https://www.espn.com/nba/team/_/name/tor/toronto-raptors')
-    print(t)
