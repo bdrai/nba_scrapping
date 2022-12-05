@@ -1,7 +1,6 @@
-import requests
 import pymysql.cursors
 from env import Env
-from bs4 import BeautifulSoup
+from scrapper.scrapper_object import ScrappingObject
 
 
 class Team:
@@ -16,7 +15,9 @@ class Team:
                                      password=env.PWD_MYSQL, database=env.DB_MYSQL)
         cursor = connection.cursor()
         if not self.is_in_db(cursor):
-            self.scrap_team_info(url, cursor)
+            scrapper = ScrappingObject()
+            self.name, self.division = scrapper.scrap_team(url)
+            self.write_in_db(cursor)
         connection.commit()
         cursor.close()
         connection.close()
@@ -41,18 +42,6 @@ class Team:
             ) VALUES (%s, %s, %s)
         """
         cursor.execute(query_insert, (self._id, self.name, self.division))
-
-    def scrap_team_info(self, url, cursor):
-        """Scraps Team data from ESPN."""
-        page = requests.get(url)
-        soup = BeautifulSoup(page.content, "html.parser")
-        page_html = soup.find(id="fitt-analytics").find(id="fittPageContainer")
-        name_html = page_html.find("h1", class_="ClubhouseHeader__Name ttu flex items-start n2").find("span")
-        self.name = ' '.join([span.text for span in name_html.find_all("span")])
-        division_html = page_html.find("ul", class_="list flex ClubhouseHeader__Record n8 ml4").find_all("li")[-1]
-        self.division = division_html.text.split("in ")[-1]
-        print(f"{self.name.upper()} ({self._id}) - {self.division}")
-        self.write_in_db(cursor)
 
     def __str__(self):
         return f"{self.name.upper()} ({self._id}) - {self.division}"
