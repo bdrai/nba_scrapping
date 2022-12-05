@@ -122,7 +122,3 @@ class NBADatabase:
         cursor.close()
         connection.close()
 
-
-if __name__ == '__main__':
-    db = NBADatabase(Env())
-    db.initialize_database()
