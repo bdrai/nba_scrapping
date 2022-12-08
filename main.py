@@ -62,7 +62,7 @@ def main(extract_bet=False):
 
     # Get bets
     if extract_bet:
-        api_request.main()
+        api_request.main_api()
 
 
 if __name__ == '__main__':

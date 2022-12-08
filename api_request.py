@@ -6,13 +6,13 @@ import pymysql.cursors
 from env import Env
 from sqlalchemy import create_engine
 
-d = {
+convert_teams = {
     "Los Angeles Clippers": "LA Clippers"
 }
 
-d_columns = {
-    "home_team": d,
-    "away_team": d
+replacer_columns = {
+    "home_team": convert_teams,
+    "away_team": convert_teams
 }
 
 
@@ -40,6 +40,7 @@ def get_odds():
 
 
 def unpack_bookmakers(dict_apps_odds):
+    """Processes bookmakers columns to extract a cleaner dictionary with useful data."""
     final_dic = {}
     for app in dict_apps_odds:
         app_name = app['title']
@@ -51,6 +52,7 @@ def unpack_bookmakers(dict_apps_odds):
 
 
 def find_best_bookmaker(dict_apps_odds):
+    """Finds best bookmaker according to the best odds for each game"""
     min_avg = sum(dict_apps_odds[list(dict_apps_odds.keys())[0]]) / 2
     best_bookmaker = list(dict_apps_odds.keys())[0]
     for key in dict_apps_odds.keys():
@@ -62,16 +64,18 @@ def find_best_bookmaker(dict_apps_odds):
 
 
 def process_odds_json(odds_json):
+    """Process the API's response into a dataframe"""
     df = pd.DataFrame(odds_json)
     df = df[['home_team', 'away_team', 'bookmakers']]
     df["date"] = datetime.date.today()
     df['bookmakers'] = df.bookmakers.apply(lambda x: unpack_bookmakers(x))
     df['bookmaker'], df['odd_home'], df['odd_away'] = zip(*df.bookmakers.apply(find_best_bookmaker))
-    df = df.drop(columns='bookmakers').replace(d_columns)
+    df = df.drop(columns='bookmakers').replace(replacer_columns)
     return df
 
 
 def get_teams_dataframe():
+    """Read Team table from database into dataframe."""
     env = Env()
     connection = pymysql.connect(host=env.HOST_MYSQL, user=env.USER_MYSQL, password=env.PWD_MYSQL,
                                  database=env.DB_MYSQL)
@@ -82,6 +86,7 @@ def get_teams_dataframe():
 
 
 def merge_odds_teams(df_odds, df_teams):
+    """Merge odds dataframe with teams one for getting teams' id."""
     df_merge = df_odds.merge(df_teams, left_on="home_team", right_on="name", how='left') \
         .drop(["name", "home_team"], axis=1).rename(columns={"id": "home_id"})
     df_merge = df_merge.merge(df_teams, left_on="away_team", right_on="name", how='left') \
@@ -90,18 +95,16 @@ def merge_odds_teams(df_odds, df_teams):
 
 
 def write_in_db(df):
+    """Write the Bet dataframe into Bet table in database"""
     env = Env()
-    # connection = pymysql.connect(host=env.HOST_MYSQL, user=env.USER_MYSQL, password=env.PWD_MYSQL,
-    #                              database=env.DB_MYSQL)
     engine = create_engine(f'mysql+pymysql://{env.USER_MYSQL}:{env.PWD_MYSQL}@{env.HOST_MYSQL}/{env.DB_MYSQL}')
     df.to_sql('Bet', engine, if_exists='append', index=False)
-    #connection.close()
 
 
-def main():
+def main_api():
+    """Main script"""
     odds_json = get_odds()
     df_odds = process_odds_json(odds_json)
     df_teams = get_teams_dataframe()
     df_merge = merge_odds_teams(df_odds, df_teams)
-    print(df_merge.head())
     write_in_db(df_merge)
