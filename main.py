@@ -53,16 +53,16 @@ def main(extract_bet=False):
     # Initialize database
     db = NBADatabase(Env())
     db.initialize_database()
-    # Get bets
-    if extract_bet:
-        api_request.main()
+
     # Main Scrapping
     dates = get_args()
     for d in dates:
         scrapper = ScrapperDay(d)
         scrapper.scrapping(save_in_db=True)
         time.sleep(1)
-
+    # Get bets
+    if extract_bet:
+        api_request.main()
 
 if __name__ == '__main__':
     main(extract_bet=True)
