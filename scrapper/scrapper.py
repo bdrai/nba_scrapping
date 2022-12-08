@@ -19,7 +19,6 @@ class ScrapperDay:
             print(game)
             box_scores_scrapper = ScrappingBoxScore(game.game_id)
             box_scores_scrapper.scrap_box_scores()
-            box_scores_scrapper.scrap_box_scores()
             if save_in_db:
                 box_scores_scrapper.save_in_db(env)
 

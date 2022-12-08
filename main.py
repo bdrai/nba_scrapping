@@ -24,7 +24,6 @@ def get_all_dates(start_date="2022-10-18", end_date=str(date.today() - datetime.
     delta = end_date - datetime.timedelta(days=1) - start_date  # returns timedelta
     for i in range(delta.days + 2):
         day = start_date + datetime.timedelta(days=i)
-        print(f"###   LOADING THE: {day}   ###")
         all_days.append(day.strftime("%Y%m%d"))  # change date to espn format yyyymmdd
     return all_days
 
@@ -60,9 +59,11 @@ def main(extract_bet=False):
         scrapper = ScrapperDay(d)
         scrapper.scrapping(save_in_db=True)
         time.sleep(1)
+
     # Get bets
     if extract_bet:
         api_request.main()
+
 
 if __name__ == '__main__':
     main(extract_bet=True)

@@ -83,7 +83,7 @@ class ScrappingBoxScore:
                 player_url, player_id, player_position = player_info
 
                 stats, is_dnp, dnp_reason = self.get_player_stats(data)
-                player = Player(player_url)
+                _ = Player(player_url) # Creates object Player: check if this player exists in db otherwise scrap him.
                 player_game_stats = PlayerGameStats(player_id, self.game_id, False, is_dnp,
                                                     dnp_reason, player_position, Stats(stats))
                 self.players_stats.append(player_game_stats)
