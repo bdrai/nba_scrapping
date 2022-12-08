@@ -2,6 +2,7 @@ import sys
 import time
 import datetime
 import argparse
+import api_request
 from env import Env
 from constants import *
 from database.nba_database import NBADatabase
@@ -48,15 +49,20 @@ def get_args():
     return result
 
 
-def main():
+def main(extract_bet=False):
+    # Initialize database
     db = NBADatabase(Env())
     db.initialize_database()
+
+    # Main Scrapping
     dates = get_args()
     for d in dates:
         scrapper = ScrapperDay(d)
         scrapper.scrapping(save_in_db=True)
         time.sleep(1)
-
+    # Get bets
+    if extract_bet:
+        api_request.main()
 
 if __name__ == '__main__':
-    main()
+    main(extract_bet=True)

@@ -65,7 +65,7 @@ class NBADatabase:
                     FOREIGN KEY (team_home_id) REFERENCES Team(id),
                     FOREIGN KEY (team_away_id) REFERENCES Team(id)
                 );
-            """
+        """
         cursor.execute(query)
 
     @staticmethod
@@ -104,12 +104,30 @@ class NBADatabase:
         """
         cursor.execute(query)
 
+    @staticmethod
+    def create_table_bet(cursor):
+        """Creates table `Bet`"""
+        query = """
+                CREATE TABLE IF NOT EXISTS Bet (
+                    `date` DATE NOT NULL,
+                    `home_id` VARCHAR(10) NOT NULL,
+                    `away_id` VARCHAR(10) NOT NULL,
+                    `odd_home` FLOAT NOT NULL, 
+                    `odd_away` FLOAT NOT NULL, 
+                    `bookmaker` VARCHAR(10) NOT NULL,
+                    FOREIGN KEY (home_id) REFERENCES Team(id),
+                    FOREIGN KEY (away_id) REFERENCES Team(id)
+                );
+        """
+        cursor.execute(query)
+
     def create_tables(self, cursor):
         """Creates all tables in once"""
         self.create_table_team(cursor)
         self.create_table_player(cursor)
         self.create_table_game(cursor)
         self.create_table_player_game_stats(cursor)
+        self.create_table_bet(cursor)
 
     def initialize_database(self):
         """Initialize the database by creating it and the tables with."""

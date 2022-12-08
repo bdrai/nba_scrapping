@@ -10,3 +10,11 @@ PLAYER_NAME = "AnchorLink truncate db external Boxscore__AthleteName"
 PLAYER_POSITION = "playerPosition pl2"
 DOMAIN_URL_FROM_DATE = 'https://www.espn.com/nba/scoreboard/_/date/'
 SEASON_START_DATE = date(2022, 10, 18)
+
+"""API CONSTANTS :"""
+API_KEY = '431eee7f792c48b0638e7e812aeba596'
+SPORT = 'basketball_nba'
+REGIONS = 'us'
+MARKETS = 'h2h,spreads'
+ODDS_FORMAT = 'decimal'
+DATE_FORMAT = 'iso'
