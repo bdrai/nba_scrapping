@@ -38,7 +38,7 @@ def get_args():
     args = parser.parse_args()  # gets the argument
     dates = vars(args)
     if not len(dates['dates']):
-        result = get_all_dates()
+        result = get_all_dates(start_date=str(datetime.date.today() - datetime.timedelta(days=1)))
     elif len(dates['dates']) == 1:
         result = get_all_dates(start_date=sys.argv[1], end_date=sys.argv[1])
     elif len(dates['dates']) == 2:

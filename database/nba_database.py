@@ -114,7 +114,7 @@ class NBADatabase:
                     `away_id` VARCHAR(10) NOT NULL,
                     `odd_home` FLOAT NOT NULL, 
                     `odd_away` FLOAT NOT NULL, 
-                    `bookmaker` VARCHAR(10) NOT NULL,
+                    `bookmaker` VARCHAR(250) NOT NULL,
                     FOREIGN KEY (home_id) REFERENCES Team(id),
                     FOREIGN KEY (away_id) REFERENCES Team(id)
                 );
