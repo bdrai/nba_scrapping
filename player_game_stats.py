@@ -47,7 +47,7 @@ class PlayerGameStats:
                 ftm,
                 fta,
                 oreb,
-                drep,
+                dreb,
                 reb,
                 ast,
                 stl,
@@ -61,7 +61,7 @@ class PlayerGameStats:
         cursor.execute(query_insert, (self.player_id, self.game_id, self.position, self.is_starter, self.is_dnp,
                                       self.dnp_reason, self.stats.min, self.stats.fgm, self.stats.fga,
                                       self.stats.three_pts_m, self.stats.three_pts_a, self.stats.ftm, self.stats.fta,
-                                      self.stats.oreb, self.stats.drep, self.stats.reb, self.stats.ast, self.stats.stl,
+                                      self.stats.oreb, self.stats.dreb, self.stats.reb, self.stats.ast, self.stats.stl,
                                       self.stats.blk, self.stats.to, self.stats.pf, self.stats.plus_minus,
                                       self.stats.pts))
 

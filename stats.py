@@ -7,7 +7,7 @@ class Stats:
     ftm: int
     fta: int
     oreb: int
-    drep: int
+    dreb: int
     reb: int
     ast: int
     stl: int
@@ -27,7 +27,7 @@ class Stats:
         self.ftm = stats_list[5]
         self.fta = stats_list[6]
         self.oreb = stats_list[7]
-        self.drep = stats_list[8]
+        self.dreb = stats_list[8]
         self.reb = stats_list[9]
         self.ast = stats_list[10]
         self.stl = stats_list[11]
@@ -60,6 +60,6 @@ class Stats:
         """Return the statistics onto a list"""
         return [
             self.min, self.fgm, self.fga, self.three_pts_m, self.three_pts_a,
-            self.ftm, self.fta, self.oreb, self.drep, self.reb, self.ast,
+            self.ftm, self.fta, self.oreb, self.dreb, self.reb, self.ast,
             self.stl, self.blk, self.to, self.pf, self.plus_minus, self.pts
         ]

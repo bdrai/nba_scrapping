@@ -89,7 +89,7 @@ class NBADatabase:
                 `ftm` INT,
                 `fta` INT,
                 `oreb` INT,
-                `drep` INT,
+                `dreb` INT,
                 `reb` INT,
                 `ast` INT,
                 `stl` INT,
