@@ -55,6 +55,7 @@ def main(extract_bet=False):
 
     # Main Scrapping
     dates = get_args()
+    dates = dates[::-1]
     for d in dates:
         scrapper = ScrapperDay(d)
         scrapper.scrapping(save_in_db=True)
